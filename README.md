@@ -7,7 +7,7 @@
 ## Explanation of Components  
 
 ### Infrastructure  
-- **IaC (Terraform/CloudFormation)**: Provisions VPC, EKS cluster, and EC2 instances  
+- **IaC (Terraform)**: Provisions VPC, EKS cluster, EC2 instances and other AWS Services from the Architecture
 - **AWS VPC**: Virtual network containing resources  
 - **EKS Cluster**: Amazon Elastic Kubernetes Service for containerized applications  
 - **EC2 Instances**: Compute resources for applications/services  
@@ -30,11 +30,11 @@
 
 ## Data Flow  
 1. IaC provisions infrastructure (VPC, EKS, EC2)  
-2. EKS/EC2 generate logs → CloudWatch  
+2. EKS/EC2, VPC Flow logs ... generate logs → CloudWatch  
 3. CloudWatch → Kinesis Firehose → S3 (Raw Data)  
 4. MLOps pipeline:  
    - Processes S3 data  
-   - Trains models in SageMaker  
+   - Trains models in SageMaker Notebook 
    - Deploys to SageMaker endpoint  
 5. Anomaly detection triggers:  
    - Lambda remediation  
@@ -45,7 +45,7 @@
 ### Terraform Modules  
 This folder contains all Terraform configuration files for provisioning AWS infrastructure. Each file is modularized based on the AWS service it manages.
 
-- terraform/
+terraform/
 
 - **s3.tf**: Defines S3 buckets for data storage, model artifacts, and logs.
 - **iam.tf**: Defines IAM roles, policies, and permissions for SageMaker, Lambda, Step Functions, etc.
@@ -62,9 +62,9 @@ This folder contains all Terraform configuration files for provisioning AWS infr
 - **variables.tf**: Stores variables for reusability (e.g., region, instance types, bucket names).
 
 ### In-progress:
-- [ ] Fetch application logs from EC2/AWS services (VPC Flow Logs, EKS, etc.)  
+- [ ] Fetch application logs from AWS services (VPC Flow Logs, EKS, EC2, etc.)  
 - [ ] Push timestamped logs to S3  
 - [ ] Add Python scripts for:  
   - Model training (from S3 logs)  
-  - Predictive analysis  
-  - Automated remediation 
+  - Apply Predictive analysis  
+  - Automated remediation
