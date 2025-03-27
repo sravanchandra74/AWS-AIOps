@@ -1,51 +1,69 @@
-# AWS-AIOps
-AI-Driven Cloud Monitoring &amp; Automation
-The Architecture of this project:
-![image](https://github.com/user-attachments/assets/cca3f439-38e6-4f88-94b8-fd6ded846756)
+# AWS-AIOps  
+**AI-Driven Cloud Monitoring & Automation**  
 
-Explanation of Components:
-IaC (Terraform/CloudFormation): Represents your Infrastructure as Code, which provisions the VPC, EKS cluster, and EC2 instances.
-AWS VPC: The virtual network that contains your resources.
-EKS Cluster: Your Amazon Elastic Kubernetes Service cluster for running containerized applications.
-EC2 Instances: Your Amazon EC2 instances for running applications or services.
-CloudWatch: Collects logs and metrics from EKS and EC2.
-Kinesis Firehose: Streams logs to S3.
-S3 Bucket (Raw Data): Stores the raw logs and metrics data.
-Data Preprocessing: Prepares the data for model training.
-SageMaker (Model Training): Trains the machine learning models for predictive analysis.
-SageMaker (Model Endpoint): Deploys the trained models for real-time inference.
-Anomaly Detection: Applies the deployed models to detect anomalies in the data.
-Lambda Functions: Executes automated remediation actions based on anomaly detection results.
-Amazon SNS: Sends notifications to Slack/MS Teams.
-Slack/MS Teams: The communication channels for receiving alerts.
+## Architecture  
+![AWS-AIOps Architecture](https://github.com/user-attachments/assets/cca3f439-38e6-4f88-94b8-fd6ded846756)  
 
-Data Flow:
-IaC provisions the infrastructure (VPC, EKS, EC2).
-EKS and EC2 generate logs and metrics, which are collected by CloudWatch.
-CloudWatch streams logs to Kinesis Firehose, which delivers them to S3.
-The MLOps pipeline processes the raw data in S3, trains ML models in SageMaker, and deploys them to a SageMaker endpoint.
-The SageMaker endpoint generates predictions, which are used for anomaly detection.
-If anomalies are detected, Lambda functions trigger remediation actions on EKS and EC2.
-Amazon SNS sends alerts to Slack/MS Teams.
+## Explanation of Components  
 
-Project Structure
-Here’s a detailed breakdown of the proposed structure:
+### Infrastructure  
+- **IaC (Terraform/CloudFormation)**: Provisions VPC, EKS cluster, and EC2 instances  
+- **AWS VPC**: Virtual network containing resources  
+- **EKS Cluster**: Amazon Elastic Kubernetes Service for containerized applications  
+- **EC2 Instances**: Compute resources for applications/services  
+
+### Monitoring & Data Pipeline  
+- **CloudWatch**: Collects logs/metrics from EKS and EC2  
+- **Kinesis Firehose**: Streams logs to S3  
+- **S3 Bucket (Raw Data)**: Stores raw logs and metrics  
+
+### AI/ML Components  
+- **Data Preprocessing**: Prepares data for training  
+- **SageMaker (Model Training)**: Trains ML models  
+- **SageMaker (Model Endpoint)**: Hosts models for real-time inference  
+- **Anomaly Detection**: Identifies anomalies using model predictions  
+
+### Alerting & Remediation  
+- **Lambda Functions**: Executes automated remediation  
+- **Amazon SNS**: Sends notifications  
+- **Slack/MS Teams**: Alert destinations  
+
+## Data Flow  
+1. IaC provisions infrastructure (VPC, EKS, EC2)  
+2. EKS/EC2 generate logs → CloudWatch  
+3. CloudWatch → Kinesis Firehose → S3 (Raw Data)  
+4. MLOps pipeline:  
+   - Processes S3 data  
+   - Trains models in SageMaker  
+   - Deploys to SageMaker endpoint  
+5. Anomaly detection triggers:  
+   - Lambda remediation  
+   - SNS → Slack/MS Teams alerts  
+
+## Project Structure  
+
+### Terraform Modules  
+
 terraform/
 This folder contains all Terraform configuration files for provisioning AWS infrastructure. Each file is modularized based on the AWS service it manages.
-s3.tf: Defines S3 buckets for data storage, model artifacts, and logs.
-iam.tf: Defines IAM roles, policies, and permissions for SageMaker, Lambda, Step Functions, etc.
-kinesis.tf: Defines Kinesis streams for live data ingestion.
-sagemaker.tf: Defines SageMaker resources (e.g., models, endpoints, training jobs).
-stepfunctions.tf: Defines Step Functions state machines for orchestrating workflows.
-eks.tf: Defines EKS clusters for Kubernetes-based workloads.
-eksng.tf: Defines EKS node groups for worker nodes.
-ec2.tf: Defines EC2 instances for additional compute resources.
-cloudwatch.tf: Defines CloudWatch alarms, logs, and dashboards for monitoring.
-network.tf: Defines networking resources (VPC, subnets, security groups, IGW, route tables).
-provider.tf → Defines the cloud provider (AWS) and required configurations.
-output.tf → Captures and displays outputs such as S3 bucket names, SageMaker endpoints, and Kinesis stream ARNs.
-variables.tf → Stores variables for reusability (e.g., region, instance types, bucket names).
+- **s3.tf**: Defines S3 buckets for data storage, model artifacts, and logs.
+- **iam.tf**: Defines IAM roles, policies, and permissions for SageMaker, Lambda, Step Functions, etc.
+- **kinesis.tf**: Defines Kinesis streams for live data ingestion.
+- **sagemaker.tf**: Defines SageMaker resources (e.g., models, endpoints, training jobs).
+- **stepfunctions.tf**: Defines Step Functions state machines for orchestrating workflows.
+- **eks.tf**: Defines EKS clusters for Kubernetes-based workloads.
+- **eksng.tf**: Defines EKS node groups for worker nodes.
+- **ec2.tf**: Defines EC2 instances for additional compute resources.
+- **cloudwatch.tf**: Defines CloudWatch alarms, logs, and dashboards for monitoring.
+- **network.tf**: Defines networking resources (VPC, subnets, security groups, IGW, route tables).
+- **provider.tf**: Defines the cloud provider (AWS) and required configurations.
+- **output.tf**: Captures and displays outputs such as S3 bucket names, SageMaker endpoints, and Kinesis stream ARNs.
+- **variables.tf**: Stores variables for reusability (e.g., region, instance types, bucket names).
 
-In-progress:
-Fetch the logs from any applications which is going to install in EC2 Instances, AWS Services (VPC Flow Logs, EKS, EC2 Instances ....) and push to S3 Bucket with timestamps.
-Need to add the python script files which runs the model (train the stored logs from S3 bucket, apply predective analysis, remediate on it own)
+### In-progress:
+- [ ] Fetch application logs from EC2/AWS services (VPC Flow Logs, EKS, etc.)  
+- [ ] Push timestamped logs to S3  
+- [ ] Add Python scripts for:  
+  - Model training (from S3 logs)  
+  - Predictive analysis  
+  - Automated remediation 
