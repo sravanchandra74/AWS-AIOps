@@ -43,9 +43,10 @@
 ## Project Structure  
 
 ### Terraform Modules  
-
-terraform/
 This folder contains all Terraform configuration files for provisioning AWS infrastructure. Each file is modularized based on the AWS service it manages.
+
+- terraform/
+
 - **s3.tf**: Defines S3 buckets for data storage, model artifacts, and logs.
 - **iam.tf**: Defines IAM roles, policies, and permissions for SageMaker, Lambda, Step Functions, etc.
 - **kinesis.tf**: Defines Kinesis streams for live data ingestion.
