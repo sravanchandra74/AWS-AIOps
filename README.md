@@ -1,4 +1,4 @@
-# AI-Driven Log Anomaly Detection and Remediation on AWS
+# AI-Driven Log Anomaly Detection and Remediation on AWS (In-progress)
 
 ## Architecture  
 ![AWS-AIOps Architecture](https://github.com/user-attachments/assets/cca3f439-38e6-4f88-94b8-fd6ded846756)
