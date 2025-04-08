@@ -1,3 +1,4 @@
+#  Kinesis Stream
 resource "aws_kinesis_stream" "log_stream" {
   name             = "${var.project_name}-${var.environment}-log-stream"
   shard_count      = 1
@@ -9,11 +10,11 @@ resource "aws_kinesis_firehose_delivery_stream" "log_firehose" {
   destination = "extended_s3"
 
   extended_s3_configuration {
-    role_arn   = aws_iam_role.kinesis_firehose_role.arn
+    role_arn   = aws_iam_role.kinesis_firehose_role.arn #  Make sure this role is defined
     bucket_arn = aws_s3_bucket.log_data_bucket.arn
-    prefix     = "logs/ec2/${formatdate("YYYY/MM/DD/HH", timestamp())}/"
+    prefix     = "logs/ec2/${formatdate("YYYY/MM/DD", timestamp())}/" #  Adjust prefix if needed
     error_output_prefix = "errors/ec2/"
-    buffering_interval = 1800
+    buffering_interval = 300 #  Adjust buffering interval (seconds)
 
     data_format_conversion_configuration {
       input_format_configuration {
@@ -29,9 +30,9 @@ resource "aws_kinesis_firehose_delivery_stream" "log_firehose" {
         }
       }
       schema_configuration {
-        role_arn = aws_iam_role.glue_role.arn
-        database_name = "default"
-        table_name = "logs"
+        role_arn = aws_iam_role.glue_role.arn #  Make sure this role is defined
+        database_name = "default" #  Check
+        table_name = "logs"    # Check
       }
       enabled = true
     }
